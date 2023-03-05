@@ -35,7 +35,7 @@ body {
 .chart_item .number_text {
     font-size: 40px;
 }
-.chart_item .music_title a {
+.chart_item a {
     color: #fff;
     text-decoration: none;
 }

@@ -22,7 +22,7 @@ async def read_item(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/statistics/year")
-async def get_year(item: StatisticsYear) -> list[tuple[str, str, int]]:
+async def get_year(item: StatisticsYear) -> list[tuple[str, str, str, int]]:
     dict_item = dict(item)
     data = Statistics().get_year(dict_item["year"])[0:100]
     return_data = []
@@ -30,10 +30,11 @@ async def get_year(item: StatisticsYear) -> list[tuple[str, str, int]]:
     for video in data:
         video_id, video_count = video
         print(video_id, video_count)
-        video_data = YTData().get(video_id)
+        _, title, author = YTData().get(video_id)
         return_data.append((
             video_id,
-            video_data[1],
+            title,
+            author,
             video_count
         ))
     return return_data

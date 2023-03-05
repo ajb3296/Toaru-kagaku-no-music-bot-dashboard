@@ -7,11 +7,15 @@ function set_chart(chart_list) {
         count++;
         let chart_id = i[0];
         let chart_title = i[1];
-        // let chart_count = i[2];
+        let chart_author = i[2];
+        // let chart_count = i[3];
         chart_item_html += '' +
         '<tr class="chart_item">'+
         '    <td class="number">'+
         '        <a class="number_text">' + count + '</a>'+
+        '    </td>'+
+        '    <td class="music_author">'+
+        '        <a href="https://www.youtube.com/watch?v=' + chart_id + '">' + chart_author + '</a>'+
         '    </td>'+
         '    <td class="music_title">'+
         '        <a href="https://www.youtube.com/watch?v=' + chart_id + '">' + chart_title + '</a>'+
@@ -23,7 +27,6 @@ function set_chart(chart_list) {
         '    </td>'+
         '</tr>'
     }
-    console.log(chart_item_html)
     chart_box.innerHTML = chart_item_html;
 }
 
