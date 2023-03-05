@@ -31,13 +31,16 @@ body {
 }
 .chart .chart_item {
     width: 100%;
-
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
 }
 .chart_item .number_text {
     font-size: 40px;
+}
+.chart_item .music_title a {
+    color: #fff;
+    text-decoration: none;
+}
+.chart_item img {
+    width: 200px;
 }
 
 @media (max-width: 760px) {

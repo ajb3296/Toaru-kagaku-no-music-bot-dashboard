@@ -1,6 +1,6 @@
 function set_chart(chart_list) {
     const chart_box = document.getElementsByClassName('chart')[0];
-    let chart_item_html = "";
+    let chart_item_html = "<table>"
     let count = 0;
 
     for (let i of chart_list) {
@@ -8,17 +8,20 @@ function set_chart(chart_list) {
         let chart_id = i[0];
         let chart_title = i[1];
         // let chart_count = i[2];
-        chart_item_html += '<div class="chart_item">'+
-        '    <div class="number">'+
+        chart_item_html += '' +
+        '<tr class="chart_item">'+
+        '    <td class="number">'+
         '        <a class="number_text">' + count + '</a>'+
-        '    </div>'+
-        '        <div class="music_title">'+
-        '        <a>' + chart_title + '</a>'+
-        '    </div>'+
-        '    <div class="image">'+
-        '        <img src="http://img.youtube.com/vi/' + chart_id + '/0.jpg">'+
-        '    </div>'+
-        '</div>'
+        '    </td>'+
+        '    <td class="music_title">'+
+        '        <a href="https://www.youtube.com/watch?v=' + chart_id + '">' + chart_title + '</a>'+
+        '    </td>'+
+        '    <td class="image">'+
+        '        <a href="https://www.youtube.com/watch?v=' + chart_id + '">'+
+        '            <img src="http://img.youtube.com/vi/' + chart_id + '/0.jpg">'+
+        '        </a>'+
+        '    </td>'+
+        '</tr>'
     }
     console.log(chart_item_html)
     chart_box.innerHTML = chart_item_html;

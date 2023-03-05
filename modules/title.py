@@ -22,7 +22,10 @@ class YTData():
             return db_data
         # DB에 정보가 존재하지 않는다면 웹에서 가져오기
         video_data = requests.get(f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={video_id}&format=json", headers=self.header).text
-        video_data = json.loads(video_data)
+        try:
+            video_data = json.loads(video_data)
+        except json.decoder.JSONDecodeError:
+            return (video_id, "Null", "Null")
         self.db_set(video_id, video_data["title"], video_data["author_name"])
         return (video_id, video_data["title"], video_data["author_name"])
     
