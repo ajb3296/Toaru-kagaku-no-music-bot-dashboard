@@ -7,6 +7,7 @@ ID, video_id, count
 """
 
 import sqlite3
+import calendar
 from datetime import datetime, timedelta
 
 from modules.setting import Setting
@@ -15,7 +16,7 @@ class Statistics:
     def __init__(self):
         self.statisticsdb = StatisticsDb()
     
-    def get_week(self) -> dict[str, int]:
+    def get_week(self) -> list[tuple[str, int]]:
         """ 이번주의 통계를 가져옵니다 """
         week_data = {}
         for day in range(7): # 0 ~ 6
@@ -36,11 +37,11 @@ class Statistics:
         # Sort
         week_data = sorted(week_data.items(), key = lambda item: item[1], reverse = True)
         return week_data
-    
-    def get_month(self) -> dict[str, int]:
+
+    def get_month(self) -> list[tuple[str, int]]:
         """ 이번달의 통계를 가져옵니다 """
         month_data = {}
-        for day in range(30): # 0 ~ 29
+        for day in range(1, 31): # 1 ~ 30
             # 타깃 날짜 설정
             target_date = datetime.today() - timedelta(days=day)
             table_name = f"date{target_date.strftime('%Y%m%d')}"
@@ -59,12 +60,29 @@ class Statistics:
         month_data = sorted(month_data.items(), key = lambda item: item[1], reverse = True)
         return month_data
     
-    def get_year(self) -> dict[str, int]:
-        """ 이번달의 통계를 가져옵니다 """
+    def get_year(self, year: int = datetime.now().year) -> list[tuple[str, int]]:
+        """ 해당하는 년도의 통계를 가져옵니다 """
         year_data = {}
-        for day in range(365): # 0 ~ 29
+
+        now = datetime.now()
+
+        # 시작 날짜 설정
+        start_date = datetime.strptime(f"{year}-01-01", '%Y-%m-%d')
+
+        # 해당 연도의 마지막 날을 설정
+        end_date = datetime.strptime(f"{year}-12-{calendar.monthrange(now.year, now.month)[1]}", '%Y-%m-%d')
+
+        # 올해일 경우 마지막 날짜를 어제로 설정
+        if now.year == year:
+            end_date = now - timedelta(days=1)
+
+        target_date = start_date
+        while True:
+            if target_date > end_date:
+                break
+
             # 타깃 날짜 설정
-            target_date = datetime.today() - timedelta(days=day)
+            target_date += timedelta(days=1)
             table_name = f"date{target_date.strftime('%Y%m%d')}"
 
             # 해당 날짜의 데이터 가져오기
@@ -87,9 +105,10 @@ class StatisticsDb:
 
     def get(self, table_name: str, video_id: str) -> tuple[int, str, int] | None:
         """ 비디오 아이디로 데이터를 가져옴 """
-        if Setting().get_path() is None:
+        path = Setting().get_path()
+        if path is None:
             return None
-        conn = sqlite3.connect(Setting().get_path() + "/statistics.db", isolation_level=None)
+        conn = sqlite3.connect(path + "/statistics.db", isolation_level=None)
         c = conn.cursor()
         try:
             c.execute(f"SELECT * FROM {table_name} WHERE video_id=:video_id", {"video_id": video_id})
@@ -102,9 +121,10 @@ class StatisticsDb:
 
     def get_all(self, table_name: str) -> list[tuple[int, str, int]] | None:
         """ 테이블의 모든 데이터를 가져옴 """
-        if Setting().get_path() is None:
+        path = Setting().get_path()
+        if path is None:
             return None
-        conn = sqlite3.connect(Setting().get_path() + "/statistics.db", isolation_level=None)
+        conn = sqlite3.connect(path + "/statistics.db", isolation_level=None)
         c = conn.cursor()
         # 내림차순으로 정렬
         try:
@@ -114,8 +134,3 @@ class StatisticsDb:
         temp = c.fetchall()
         conn.close()
         return temp
-
-if __name__ == "__main__":
-    # For test
-    statistics = Statistics()
-    statistics.up("Youtube_video_id")

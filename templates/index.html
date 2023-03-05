@@ -20,6 +20,9 @@
 		<!-- CSS -->
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', path='/css/index.css') }}">
 
+		<!-- JS -->
+		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>		
+
     </head>
     <body>
 		<div class="menu">
@@ -27,6 +30,12 @@
 			<a>Month</a>
 			<a>Week</a>
 		</div>
-        <h1>Toaru kagaku no music chart</h1>
+		<center>
+	        <h1 class="title">Toaru kagaku no music chart</h1>
+			<div class="chart">
+			</div>
+		</center>
     </body>
+	<script type='text/javascript' src="{{ url_for('static', path='/js/chart.js') }}"></script>
+	<script type='text/javascript' src="{{ url_for('static', path='/js/index.js') }}"></script>
 </html>

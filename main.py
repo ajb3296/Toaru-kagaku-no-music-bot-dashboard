@@ -1,13 +1,15 @@
-import os
+import json
 import uvicorn
+import requests
 
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from modules.statistics import Statistics
-from modules.model import GetPath
+from modules.model import GetPath, StatisticsYear
 from modules.setting import Setting
+from modules.title import YTData
 
 app = FastAPI()
 
@@ -19,10 +21,22 @@ templates = Jinja2Templates(directory="templates")
 async def read_item(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.get("/statistics/year")
-async def get_year(request: Request):
-    data = Statistics().get_year()
-    return data[0:100]
+@app.post("/statistics/year")
+async def get_year(item: StatisticsYear) -> list[tuple[str, str, int]]:
+    dict_item = dict(item)
+    data = Statistics().get_year(dict_item["year"])[0:100]
+    return_data = []
+    header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'}
+    for video in data:
+        video_id, video_count = video
+        print(video_id, video_count)
+        video_data = YTData().get(video_id)
+        return_data.append((
+            video_id,
+            video_data[1],
+            video_count
+        ))
+    return return_data
 
 @app.get("/statistics/month")
 async def get_month(request: Request):
