@@ -26,6 +26,8 @@ class YTData():
             video_data = json.loads(video_data)
         except json.decoder.JSONDecodeError:
             return (video_id, "Null", "Null")
+        
+        # DB에 정보 저장
         self.db_set(video_id, video_data["title"], video_data["author_name"])
         return (video_id, video_data["title"], video_data["author_name"])
     
