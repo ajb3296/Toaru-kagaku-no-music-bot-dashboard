@@ -60,21 +60,9 @@ class Statistics:
         month_data = sorted(month_data.items(), key = lambda item: item[1], reverse = True)
         return month_data
     
-    def get_year(self, year: int = datetime.now().year) -> list[tuple[str, int]]:
+    def get_data(self, start_date, end_date) -> list[tuple[str, int]]:
         """ 해당하는 년도의 통계를 가져옵니다 """
         year_data = {}
-
-        now = datetime.now()
-
-        # 시작 날짜 설정
-        start_date = datetime.strptime(f"{year}-01-01", '%Y-%m-%d')
-
-        # 해당 연도의 마지막 날을 설정
-        end_date = datetime.strptime(f"{year}-12-{calendar.monthrange(now.year, now.month)[1]}", '%Y-%m-%d')
-
-        # 올해일 경우 마지막 날짜를 어제로 설정
-        if now.year == year:
-            end_date = now - timedelta(days=1)
 
         target_date = start_date
         while True:
@@ -108,7 +96,7 @@ class StatisticsDb:
         path = Setting().get_path()
         if path is None:
             return None
-        conn = sqlite3.connect(path + "/statistics.db", isolation_level=None)
+        conn = sqlite3.connect(path, isolation_level=None)
         c = conn.cursor()
         try:
             c.execute(f"SELECT * FROM {table_name} WHERE video_id=:video_id", {"video_id": video_id})
@@ -124,7 +112,7 @@ class StatisticsDb:
         path = Setting().get_path()
         if path is None:
             return None
-        conn = sqlite3.connect(path + "/statistics.db", isolation_level=None)
+        conn = sqlite3.connect(path, isolation_level=None)
         c = conn.cursor()
         # 내림차순으로 정렬
         try:

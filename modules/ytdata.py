@@ -9,7 +9,8 @@ import json
 import sqlite3
 import requests
 
-class YTData():
+
+class YTData:
     def __init__(self):
         self.cache_db = "cache.db"
         self.header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'}
